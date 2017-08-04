@@ -18,7 +18,11 @@ class Book extends Component {
           </div>
         </div>
         <div className="book-title">{this.props.title}</div>
-        <div className="book-authors">{this.props.authors[0]}</div>
+        {this.props.authors.map((author) =>
+          <div className="book-authors" key={author}>
+            {author}
+            </div>
+          )}
       </div>
     )
   }
