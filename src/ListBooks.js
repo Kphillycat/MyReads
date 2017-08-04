@@ -1,6 +1,20 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import * as BooksAPI from './BooksAPI'
+import Book from './Book'
 
 class ListBooks extends Component {
+  state = {
+    books: []
+  }
+
+  componentDidMount() {
+      BooksAPI.getAll().then((books) => {
+        console.log(books)
+        this.setState({ books })
+      })
+    }
+
   render() {
     return (
       <div className="list-books">
@@ -13,6 +27,7 @@ class ListBooks extends Component {
               <h2 className="bookshelf-title">Currently Reading</h2>
               <div className="bookshelf-books">
                 <ol className="books-grid">
+                  <li><Book authors={['Bobo']} title={'Bobos Life'} previewLink={'http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api'} /> </li>
                   <li>
                     <div className="book">
                       <div className="book-top">
@@ -159,7 +174,9 @@ class ListBooks extends Component {
           </div>
         </div>
         <div className="open-search">
-          <a onClick={() => this.props.handleAdd()}>Add a book</a>
+          <Link
+            to="/"
+          >Add a book</Link>
         </div>
       </div>
     )
