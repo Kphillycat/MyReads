@@ -12,13 +12,12 @@ class BooksSearch extends Component {
   allowedCategories = ["currentlyReading", "wantToRead", "read"];
 
   handleSearch = (searchTerm) => {
-    console.log('searchTerm ', searchTerm);
     if(!searchTerm) {
       this.setState({ books: [] });
       return;
     }
-    BooksAPI.search(searchTerm, 100).then((books) => {
-      console.log('search books results', books);
+    // TODO: Add a debounce
+    BooksAPI.search(searchTerm, 20).then((books) => {
       if(!books.error) {
         this.setState({ books });
       }
@@ -26,15 +25,15 @@ class BooksSearch extends Component {
   }
 
   handleCategoryChange = (shelf, book) => {
-    if(this.allowedCategories.indexOf(shelf) === -1) return;
+    if(this.allowedCategories.indexOf(shelf) === -1) {
+      return;
+    }
     BooksAPI.update(book, shelf).then((books) => {
-      this.updateBookShelfs();
+      console.log('UPDATED BOOK ', books);
     })
   }
 
   render () {
-    console.log('this.state.books ', this.state.books)
-
     return (
       <div className="search-books">
         <div className="search-books-bar">

@@ -4,11 +4,12 @@ import PropTypes from 'prop-types'
 class Book extends Component {
   static propTypes = {
     bookDetail: PropTypes.object.isRequired,
-    handleCategoryChange: PropTypes.func
+    handleCategoryChange: PropTypes.func.isRequired
   }
 
   render() {
-    const { bookDetail, handleCategoryChange, showMenu } = this.props;
+    const { bookDetail, handleCategoryChange } = this.props;
+    // Check that authors is an array before iterating.
     bookDetail.authors = bookDetail.authors || [];
 
     return (
@@ -21,9 +22,7 @@ class Book extends Component {
               backgroundImage: 'url(' + bookDetail.imageLinks.smallThumbnail + ')'
             }}>
           </div>
-          <div className="book-shelf-changer"
-              style={ {display: showMenu ? 'block' : 'none' } }
-          >
+          <div className="book-shelf-changer">
             <select
                 value={bookDetail.shelf}
                 onChange={(event) => handleCategoryChange(event.target.value, bookDetail)}
@@ -38,8 +37,8 @@ class Book extends Component {
         </div>
         <div className="book-title">{bookDetail.title}</div>
         {
-          bookDetail.authors.map((author) =>
-            <div className="book-authors" key={author}>
+          bookDetail.authors.map((author, idx) =>
+            <div className="book-authors" key={idx}>
               {author}
               </div>
           )

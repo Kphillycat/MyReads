@@ -16,15 +16,25 @@ class ListBooks extends Component {
     });
   }
 
+  /**
+  * @description Updates the bookshelf via API and re-render
+  *
+  */
   updateBookShelfs = () => {
     BooksAPI.getAll().then((books) => {
       this.setState({ books });
+      // Move the window to the top to indicate the update
+      window.scrollTo(0,0);
     });
   }
 
   handleCategoryChange = (shelf, book) => {
-    if(this.allowedCategories.indexOf(shelf) === -1) return
+    if(this.allowedCategories.indexOf(shelf) === -1) {
+      return;
+    }
+
     BooksAPI.update(book, shelf).then((books) => {
+      // Trigger a API call and re-render if update is successful
       this.updateBookShelfs();
     })
   }
@@ -36,6 +46,7 @@ class ListBooks extends Component {
       "read": []
     }
 
+    // Create categories object to make it easier to build the grid
     this.state.books.forEach((book) => {
       bookCategories[book.shelf].push(book);
     });
@@ -55,7 +66,6 @@ class ListBooks extends Component {
                     <li key={book.id}>
                       <Book
                         bookDetail={book}
-                        showMenu={true}
                         handleCategoryChange={this.handleCategoryChange} />
                     </li>
                   )}
@@ -70,7 +80,6 @@ class ListBooks extends Component {
                     <li key={book.id}>
                       <Book
                         bookDetail={book}
-                        showMenu={true}
                         handleCategoryChange={this.handleCategoryChange} />
                     </li>
                   )}
@@ -85,7 +94,6 @@ class ListBooks extends Component {
                     <li key={book.id}>
                       <Book
                         bookDetail={book}
-                        showMenu={true}
                         handleCategoryChange={this.handleCategoryChange} />
                     </li>
                   )}
