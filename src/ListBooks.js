@@ -8,12 +8,27 @@ class ListBooks extends Component {
     books: []
   }
 
+  allowedCategories = ["currentlyReading", "wantToRead", "read"];
+
   componentDidMount() {
-      BooksAPI.getAll().then((books) => {
-        console.log(books);
-        this.setState({ books })
-      })
-    }
+    BooksAPI.getAll().then((books) => {
+      this.setState({ books })
+    });
+  }
+
+  updateBookShelfs = () => {
+    BooksAPI.getAll().then((books) => {
+      this.setState({ books });
+    });
+  }
+
+  handleCategoryChange = (shelf, book) => {
+    if(this.allowedCategories.indexOf(shelf) === -1) return
+    BooksAPI.update(book, shelf).then((books) => {
+      console.log(books);
+      this.updateBookShelfs();
+    })
+  }
 
   render() {
     let bookCategories = {
@@ -25,8 +40,6 @@ class ListBooks extends Component {
     this.state.books.forEach((book) => {
       bookCategories[book.shelf].push(book);
     });
-
-    console.log('bookCategories ', bookCategories)
 
     return (
       <div className="list-books">
@@ -42,9 +55,8 @@ class ListBooks extends Component {
                   {bookCategories["currentlyReading"].map((book) =>
                     <li key={book.id}>
                       <Book
-                        authors={book.authors}
-                        title={book.title}
-                        previewLink={book.imageLinks.smallThumbnail} />
+                        bookDetail={book}
+                        handleCategoryChange={this.handleCategoryChange} />
                     </li>
                   )}
                 </ol>
@@ -57,9 +69,8 @@ class ListBooks extends Component {
                   {bookCategories["wantToRead"].map((book) =>
                     <li key={book.id}>
                       <Book
-                        authors={book.authors}
-                        title={book.title}
-                        previewLink={book.imageLinks.smallThumbnail} />
+                        bookDetail={book}
+                        handleCategoryChange={this.handleCategoryChange} />
                     </li>
                   )}
                 </ol>
@@ -72,9 +83,8 @@ class ListBooks extends Component {
                   {bookCategories["read"].map((book) =>
                     <li key={book.id}>
                       <Book
-                        authors={book.authors}
-                        title={book.title}
-                        previewLink={book.imageLinks.smallThumbnail} />
+                        bookDetail={book}
+                        handleCategoryChange={this.handleCategoryChange} />
                     </li>
                   )}
                 </ol>
