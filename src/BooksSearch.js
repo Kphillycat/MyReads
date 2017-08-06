@@ -1,8 +1,40 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import * as BooksAPI from './BooksAPI'
+import _ from 'lodash'
+import Book from './Book'
 
 class BooksSearch extends Component {
+  state = {
+    books: []
+  }
+
+  allowedCategories = ["currentlyReading", "wantToRead", "read"];
+
+  handleSearch = (searchTerm) => {
+    console.log('searchTerm ', searchTerm);
+    if(!searchTerm) {
+      this.setState({ books: [] });
+      return;
+    }
+    BooksAPI.search(searchTerm, 100).then((books) => {
+      console.log('search books results', books);
+      if(!books.error) {
+        this.setState({ books });
+      }
+    });
+  }
+
+  handleCategoryChange = (shelf, book) => {
+    if(this.allowedCategories.indexOf(shelf) === -1) return;
+    BooksAPI.update(book, shelf).then((books) => {
+      this.updateBookShelfs();
+    })
+  }
+
   render () {
+    console.log('this.state.books ', this.state.books)
+
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -18,13 +50,28 @@ class BooksSearch extends Component {
 
               However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
               you don't find a specific author or title. Every search is limited by search terms.
-            */}
-            <input type="text" placeholder="Search by title or author"/>
+            */
+
+            }
+            <input
+              type="text"
+              placeholder="Search by title or author"
+              onChange={(event) => this.handleSearch(event.target.value)}
+              />
 
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid"></ol>
+          <ol className="books-grid">
+            {this.state.books.map((book) =>
+              <li key={book.id}>
+                <Book
+                  bookDetail={book}
+                  handleCategoryChange={this.handleCategoryChange}
+                  />
+              </li>
+            )}
+          </ol>
         </div>
       </div>
     )

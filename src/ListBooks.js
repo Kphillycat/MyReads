@@ -25,7 +25,6 @@ class ListBooks extends Component {
   handleCategoryChange = (shelf, book) => {
     if(this.allowedCategories.indexOf(shelf) === -1) return
     BooksAPI.update(book, shelf).then((books) => {
-      console.log(books);
       this.updateBookShelfs();
     })
   }
@@ -56,6 +55,7 @@ class ListBooks extends Component {
                     <li key={book.id}>
                       <Book
                         bookDetail={book}
+                        showMenu={true}
                         handleCategoryChange={this.handleCategoryChange} />
                     </li>
                   )}
@@ -70,6 +70,7 @@ class ListBooks extends Component {
                     <li key={book.id}>
                       <Book
                         bookDetail={book}
+                        showMenu={true}
                         handleCategoryChange={this.handleCategoryChange} />
                     </li>
                   )}
@@ -84,6 +85,7 @@ class ListBooks extends Component {
                     <li key={book.id}>
                       <Book
                         bookDetail={book}
+                        showMenu={true}
                         handleCategoryChange={this.handleCategoryChange} />
                     </li>
                   )}
