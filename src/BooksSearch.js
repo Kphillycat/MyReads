@@ -11,6 +11,11 @@ class BooksSearch extends Component {
 
   allowedCategories = ["currentlyReading", "wantToRead", "read"];
 
+  /**
+  * @description Updates the state based on search term via API
+  * @param searchTerm {String}
+  *
+  */
   handleSearch = (searchTerm) => {
     if(!searchTerm) {
       this.setState({ books: [] });
@@ -24,12 +29,18 @@ class BooksSearch extends Component {
     });
   }
 
+  /**
+  * @description Updates the bookshelf on the backend via API
+  * @param shelf {String} - Name of shelf
+  * @param book {Object} - Includes ID of Book
+  *
+  */
   handleCategoryChange = (shelf, book) => {
     if(this.allowedCategories.indexOf(shelf) === -1) {
       return;
     }
     BooksAPI.update(book, shelf).then((books) => {
-      console.log('UPDATED BOOK ', books);
+      console.log('* book updated * ', books);
     })
   }
 
@@ -50,7 +61,6 @@ class BooksSearch extends Component {
               However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
               you don't find a specific author or title. Every search is limited by search terms.
             */
-
             }
             <input
               type="text"

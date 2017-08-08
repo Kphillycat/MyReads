@@ -17,7 +17,7 @@ class ListBooks extends Component {
   }
 
   /**
-  * @description Updates the bookshelf via API and re-render
+  * @description Fetchs all the books via API and re-renders the component
   *
   */
   updateBookShelfs = () => {
@@ -28,6 +28,12 @@ class ListBooks extends Component {
     });
   }
 
+  /**
+  * @description Updates the bookshelf on the backend via API and re-renders the component
+  * @param shelf {String} - Name of shelf
+  * @param book {Object} - Includes ID of Book
+  *
+  */
   handleCategoryChange = (shelf, book) => {
     if(this.allowedCategories.indexOf(shelf) === -1) {
       return;
