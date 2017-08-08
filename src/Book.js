@@ -8,9 +8,13 @@ class Book extends Component {
   }
 
   render() {
+    const defaultImage = 'https://books.google.com/books/content?id=none&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api';
     const { bookDetail, handleCategoryChange } = this.props;
     // Check that authors is an array before iterating.
     bookDetail.authors = bookDetail.authors || [];
+
+    // Set default image for books with no images
+    const bookImage = bookDetail.imageLinks ? bookDetail.imageLinks.smallThumbnail : defaultImage;
 
     return (
       <div className="book">
@@ -19,7 +23,7 @@ class Book extends Component {
             {
               width: 128,
               height: 193,
-              backgroundImage: 'url(' + bookDetail.imageLinks.smallThumbnail + ')'
+              backgroundImage: 'url(' + bookImage + ')'
             }}>
           </div>
           <div className="book-shelf-changer">
