@@ -1,61 +1,16 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import * as BooksAPI from './BooksAPI'
 import Book from './Book'
+import PropTypes from 'prop-types'
 
 class ListBooks extends Component {
-  state = {
-    books: []
-  }
-
-  allowedCategories = ["currentlyReading", "wantToRead", "read"];
-
-  componentDidMount() {
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books })
-    });
-  }
-
-  /**
-  * @description Fetchs all the books via API and re-renders the component
-  *
-  */
-  updateBookShelfs = () => {
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books });
-      // Move the window to the top to indicate the update
-      window.scrollTo(0,0);
-    });
-  }
-
-  /**
-  * @description Updates the bookshelf on the backend via API and re-renders the component
-  * @param shelf {String} - Name of shelf
-  * @param book {Object} - Includes ID of Book
-  *
-  */
-  handleCategoryChange = (shelf, book) => {
-    if(this.allowedCategories.indexOf(shelf) === -1) {
-      return;
-    }
-
-    BooksAPI.update(book, shelf).then((books) => {
-      // Trigger a API call and re-render if update is successful
-      this.updateBookShelfs();
-    })
+  static propTypes = {
+    bookCategories: PropTypes.object.isRequired,
+    handleCategoryChange: PropTypes.func.isRequired
   }
 
   render() {
-    let bookCategories = {
-      "currentlyReading": [],
-      "wantToRead": [],
-      "read": []
-    }
-
-    // Create categories object to make it easier to build the grid
-    this.state.books.forEach((book) => {
-      bookCategories[book.shelf].push(book);
-    });
+    const { bookCategories, handleCategoryChange } = this.props;
 
     return (
       <div className="list-books">
@@ -72,7 +27,7 @@ class ListBooks extends Component {
                     <li key={book.id}>
                       <Book
                         bookDetail={book}
-                        handleCategoryChange={this.handleCategoryChange} />
+                        handleCategoryChange={handleCategoryChange} />
                     </li>
                   )}
                 </ol>
@@ -86,7 +41,7 @@ class ListBooks extends Component {
                     <li key={book.id}>
                       <Book
                         bookDetail={book}
-                        handleCategoryChange={this.handleCategoryChange} />
+                        handleCategoryChange={handleCategoryChange} />
                     </li>
                   )}
                 </ol>
@@ -100,7 +55,7 @@ class ListBooks extends Component {
                     <li key={book.id}>
                       <Book
                         bookDetail={book}
-                        handleCategoryChange={this.handleCategoryChange} />
+                        handleCategoryChange={handleCategoryChange} />
                     </li>
                   )}
                 </ol>
@@ -110,7 +65,7 @@ class ListBooks extends Component {
         </div>
         <div className="open-search">
           <Link
-            to="/"
+            to="/search"
           >Add a book</Link>
         </div>
       </div>

@@ -3,8 +3,14 @@ import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import _ from 'lodash'
 import Book from './Book'
+import PropTypes from 'prop-types'
 
 class BooksSearch extends Component {
+  static propTypes = {
+    shelfBooks: PropTypes.array.isRequired,
+    handleCategoryChange: PropTypes.func.isRequired
+  }
+
   state = {
     books: []
   }
@@ -16,7 +22,7 @@ class BooksSearch extends Component {
   * @param searchTerm {String}
   *
   */
-  handleSearch = (searchTerm) => {
+  handleSearch = (searchTerm, shelfBooks) => {
     if(!searchTerm) {
       this.setState({ books: [] });
       return;
@@ -24,32 +30,31 @@ class BooksSearch extends Component {
     // TODO: Add a debounce
     BooksAPI.search(searchTerm, 20).then((books) => {
       if(!books.error) {
+        // Sync the shelf for each book returned from the search with the current shelf
+        books.forEach((book, bookIndex) => {
+          for(let idx = 0; idx < shelfBooks.length; idx++) {
+            if(book.id === shelfBooks[idx].id) {
+              book.shelf = shelfBooks[idx].shelf;
+              break;
+            } else {
+              book.shelf = "none";
+            }
+          }
+        });
+
         this.setState({ books });
       }
     });
   }
 
-  /**
-  * @description Updates the bookshelf on the backend via API
-  * @param shelf {String} - Name of shelf
-  * @param book {Object} - Includes ID of Book
-  *
-  */
-  handleCategoryChange = (shelf, book) => {
-    if(this.allowedCategories.indexOf(shelf) === -1) {
-      return;
-    }
-    BooksAPI.update(book, shelf).then((books) => {
-      console.log('* book updated * ', books);
-    })
-  }
-
   render () {
+    const { shelfBooks, handleCategoryChange } = this.props;
+
     return (
       <div className="search-books">
         <div className="search-books-bar">
           <Link
-            to='/books'
+            to='/'
             className="close-search"
           >Close</Link>
           <div className="search-books-input-wrapper">
@@ -65,7 +70,7 @@ class BooksSearch extends Component {
             <input
               type="text"
               placeholder="Search by title or author"
-              onChange={(event) => this.handleSearch(event.target.value)}
+              onChange={(event) => this.handleSearch(event.target.value, shelfBooks)}
               />
 
           </div>
@@ -76,7 +81,7 @@ class BooksSearch extends Component {
               <li key={book.id}>
                 <Book
                   bookDetail={book}
-                  handleCategoryChange={this.handleCategoryChange}
+                  handleCategoryChange={handleCategoryChange}
                   />
               </li>
             )}
