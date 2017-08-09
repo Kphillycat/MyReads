@@ -19,18 +19,6 @@ class BooksApp extends Component {
   }
 
   /**
-  * @description Fetchs all the books via API and re-renders the component
-  *
-  */
-  updateBookShelfs = () => {
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books });
-      // Move the window to the top to indicate the update
-      window.scrollTo(0,0);
-    });
-  }
-
-  /**
   * @description Updates the bookshelf on the backend via API and re-renders the component
   * @param shelf {String} - Name of shelf
   * @param book {Object} - Includes ID of Book
@@ -41,10 +29,20 @@ class BooksApp extends Component {
       return;
     }
 
-    BooksAPI.update(book, shelf).then((books) => {
-      // Trigger a API call and re-render if update is successful
-      this.updateBookShelfs();
-    })
+    if(book.shelf !== shelf) {
+      // Update shelf via API
+      BooksAPI.update(book, shelf).then((books) => {
+        book.shelf = shelf;
+
+        // Now update current state by moving book to the shelf
+        // Remove the current book and then
+        // append it back to the state with new shelf
+        this.setState({
+          books: this.state.books.filter(
+              (curBook) => curBook.id !== book.id).concat([book])
+        })
+      });
+    }
   }
 
   render() {

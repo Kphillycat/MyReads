@@ -30,6 +30,7 @@ class BooksSearch extends Component {
     // TODO: Add a debounce
     BooksAPI.search(searchTerm, 20).then((books) => {
       if(!books.error) {
+        // TODO: Create quicker way to search current shelf by bookId
         // Sync the shelf for each book returned from the search with the current shelf
         books.forEach((book, bookIndex) => {
           for(let idx = 0; idx < shelfBooks.length; idx++) {
